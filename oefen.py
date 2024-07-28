@@ -8,6 +8,8 @@ from pygame.locals import (
     K_LEFT,
     K_RIGHT,
     K_ESCAPE,
+    K_RETURN,
+    K_BACKSPACE,
     KEYDOWN,
     QUIT,
 )
@@ -18,6 +20,9 @@ HEIGHT = 800
 WIDTH = 1200
 
 screen = pygame.display.set_mode((WIDTH,HEIGHT))
+
+# Initialize Pygame and Pygame Font Module
+pygame.init()
 
 #defining classes
 class Player(pygame.sprite.Sprite):
@@ -115,13 +120,6 @@ all_sprites = pygame.sprite.Group()
 clouds = pygame.sprite.Group()
 all_sprites.add(player)
 
-#text
-Robbe = Text("Robbe",64,WIDTH//2,HEIGHT//2,(0,0,0))
-Flore = Text("Flore",64,WIDTH//2,HEIGHT//2,(0,0,0))
-Hans = Text("Hans",64,WIDTH//2,HEIGHT//2,(0,0,0))
-Krista = Text("Krista",64,WIDTH//2,HEIGHT//2,(0,0,0))
-text = [Robbe, Flore, Hans, Krista]
-
 clock = pygame.time.Clock()
 
 pygame.display.set_caption("Missile Evaders")
@@ -133,42 +131,48 @@ start = pygame.mixer.Sound("start.wav")
 pygame.mixer.music.load("main2.mp3")
 pygame.mixer.music.play(loops=-1)
 
-profile_index = 0
-while running:
-    screen.fill((135,206,235))
+playername = ""
+input_active = True
+input_rect = pygame.Rect(WIDTH//2 - 100, HEIGHT//2 - 32, 200, 64)
+color_active = pygame.Color('lightskyblue3')
+color_passive = pygame.Color('gray15')
+color = color_passive
+font = pygame.font.Font(None, 64)
+
+while input_active:
+    screen.fill((135, 206, 235))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
+        if event.type == KEYDOWN:
+            if event.key == K_RETURN:
+                start.play()
+                input_active = False
+            elif event.key == K_BACKSPACE:
+                playername = playername[:-1]
+            else:
+                playername += event.unicode
         if event.type == ADDCLOUD:
             new_cloud = Clouds()
             all_sprites.add(new_cloud)
             clouds.add(new_cloud)
-        if event.type == KEYDOWN:
-            if event.key == K_UP:
-                click.play()
-                profile_index += 1
-                if profile_index >= 3:
-                    profile_index =3
-            if event.key == K_DOWN:
-                click.play()
-                profile_index -= 1
-                if profile_index <=0:
-                    profile_index = 0
-            if event.key == K_SPACE:
-                start.play()
-                running = False
+    
     clouds.update()
-    playername = text[profile_index].text
     for entity in clouds:
         screen.blit(entity.surf, entity.rect)
-    header = Text("Choose your profile, press space to proceed",44,WIDTH//2,HEIGHT//4,(0,0,0))
-    header.update()
-    rectangle = Shape(250,100,(255,255,255),WIDTH//2,HEIGHT//2)
-    rectangle.update()
-    screen.blit(text[profile_index].surf,text[profile_index].rect)
-    pygame.display.flip()
-    clock.tick(60)
 
+    header = Text("Give in a username, press space to proceed",44,WIDTH//2,HEIGHT//4,(0,0,0))
+    header.update()
+
+    # Render the current playername
+    txt_surface = font.render(playername, True, color)
+    width = max(200, txt_surface.get_width() + 10)
+    input_rect.w = width
+    screen.blit(txt_surface, (input_rect.x + 5, input_rect.y + 5))
+    pygame.draw.rect(screen, color, input_rect, 2)
+
+    pygame.display.flip()
+    clock.tick(30)
 
 explosion = pygame.mixer.Sound("Explosion+3.wav")
 running = True
@@ -213,7 +217,6 @@ while running:
     score_string2 = str(score_int)
     score_string1 = "score: "
     score_string = score_string1 + score_string2
-    print(score_string)
     score_text = Text(score_string, 35, 1080, 25,(0,0,0))
     score_text.update()
     
@@ -224,7 +227,6 @@ while running:
 
 all_scores = open("Missile Evaders all scores.txt","a")
 score_log = playername + ": " + score_string +"\n"
-print(score_log)
 all_scores.write(score_log)
 all_scores.close()
 high_scores = open("Missile Evaders highscores.txt", "r")
@@ -235,7 +237,6 @@ for x in high_scores:
     sep_line[1] = sep_line[1].strip("\n")
     high_score_list.append(dict(profile = sep_line[0], score = int(sep_line[1]))) 
 high_score_list.append(dict(profile = playername, score = score_int))
-print(high_score_list)
 sort_list = []
 for x in range(6):
     sort_list.append(high_score_list[x].get("score"))
@@ -249,9 +250,7 @@ for x in range(5):
         if sort_list[x] == high_score_list[y].get("score"):
             high_score_list_new.append(high_score_list[y])
             high_score_list_new_strings.append(high_score_list_new[x].get("profile") + ": " + str(high_score_list_new[x].get("score")) + "\n")
-            print(high_score_list_new)
             break
-print(high_score_list_new_strings)
 high_scores.close()
 high_scores = open("Missile Evaders highscores.txt", "w")
 for x in high_score_list_new_strings:
