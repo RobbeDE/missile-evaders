@@ -28,3 +28,4 @@ sdfqsfd: score: 151
 hbkm: score: 108
 hallo: score: 219
 hoi: score: 139
+hallo: score: 112
