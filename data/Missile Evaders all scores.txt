@@ -20,3 +20,11 @@ Hans: score: 1039
 Hans: score: 1984
 Hans: score: 180
 Hans: score: 324
+robe: score: 99
+hoi: score: 438
+df: score: 109
+ddd: score: 113
+sdfqsfd: score: 151
+hbkm: score: 108
+hallo: score: 219
+hoi: score: 139

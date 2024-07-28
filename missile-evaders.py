@@ -28,7 +28,7 @@ pygame.init()
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super(Player,self).__init__()
-        self.surf = pygame.image.load("jet.png").convert()
+        self.surf = pygame.image.load("assets/sprites/jet.png").convert()
         self.surf.set_colorkey((255,255,255),RLEACCEL)
         self.rect = self.surf.get_rect()
         self.speed = 10
@@ -53,7 +53,7 @@ class Player(pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super(Enemy,self).__init__()
-        self.surf = pygame.image.load("missile.png").convert()
+        self.surf = pygame.image.load("assets/sprites/missile.png").convert()
         self.surf.set_colorkey((255,255,255),RLEACCEL)
         self.rect = self.surf.get_rect(
             center=(
@@ -69,7 +69,7 @@ class Enemy(pygame.sprite.Sprite):
 class Clouds(pygame.sprite.Sprite):
     def __init__(self):
         super(Clouds,self).__init__()
-        self.surf = pygame.image.load("cloud.png").convert()
+        self.surf = pygame.image.load("assets/sprites/cloud.png").convert()
         self.surf.set_colorkey((0,0,0),RLEACCEL)
         self.rect = self.surf.get_rect(
             center=(
@@ -126,9 +126,9 @@ pygame.display.set_caption("Missile Evaders")
 
 running = True
 
-click = pygame.mixer.Sound("click.wav")
-start = pygame.mixer.Sound("start.wav")
-pygame.mixer.music.load("main2.mp3")
+click = pygame.mixer.Sound("assets/soundtracks/click.wav")
+start = pygame.mixer.Sound("assets/soundtracks/start.wav")
+pygame.mixer.music.load("assets/soundtracks/main2.mp3")
 pygame.mixer.music.play(loops=-1)
 
 playername = ""
@@ -174,7 +174,7 @@ while input_active:
     pygame.display.flip()
     clock.tick(30)
 
-explosion = pygame.mixer.Sound("Explosion+3.wav")
+explosion = pygame.mixer.Sound("assets/soundtracks/Explosion+3.wav")
 running = True
 
 score_int = 0
@@ -225,11 +225,11 @@ while running:
     clock.tick(60)
 
 
-all_scores = open("Missile Evaders all scores.txt","a")
+all_scores = open("data/Missile Evaders all scores.txt","a")
 score_log = playername + ": " + score_string +"\n"
 all_scores.write(score_log)
 all_scores.close()
-high_scores = open("Missile Evaders highscores.txt", "r")
+high_scores = open("data/Missile Evaders highscores.txt", "r")
 high_score_list = []
 teller = 0
 for x in high_scores:
@@ -252,7 +252,7 @@ for x in range(5):
             high_score_list_new_strings.append(high_score_list_new[x].get("profile") + ": " + str(high_score_list_new[x].get("score")) + "\n")
             break
 high_scores.close()
-high_scores = open("Missile Evaders highscores.txt", "w")
+high_scores = open("data/Missile Evaders highscores.txt", "w")
 for x in high_score_list_new_strings:
     high_scores.write(x)
 high_scores.close()
