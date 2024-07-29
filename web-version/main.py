@@ -162,7 +162,7 @@ async def main():
         for entity in clouds:
             screen.blit(entity.surf, entity.rect)
 
-        header = Text("Give in a username, press space to proceed",44,WIDTH//2,HEIGHT//4,(0,0,0))
+        header = Text("Give in a username, press ENTER to proceed",44,WIDTH//2,HEIGHT//4,(0,0,0))
         header.update()
 
         # Render the current playername
